@@ -3,7 +3,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField] private float _speed = 8f;
-    [SerializeField] private float _jumpForce = 4f;
+    [SerializeField] private float _jumpForce = 2f;
     
     private Rigidbody _rigidbody;
     private Animator _animator;
@@ -15,9 +15,9 @@ public class Player : MonoBehaviour
         _animator = GetComponent<Animator>();
         _fsm = new Fsm();
 
-        _fsm.AddState(new FsmStateIdle(_fsm, _animator));
+        _fsm.AddState(new FsmStateIdle(_fsm));
         _fsm.AddState(new FsmStateRun(_fsm, _rigidbody, _animator, _speed));
-        _fsm.AddState(new FsmStateJump(_fsm, _rigidbody, _animator, _jumpForce));
+        _fsm.AddState(new FsmStateJump(_fsm, _rigidbody, _animator, _speed, _jumpForce));
 
         _animator.SetBool("IsMoving", false);
         _animator.SetBool("IsJumping", false);

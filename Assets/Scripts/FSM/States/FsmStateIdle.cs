@@ -2,12 +2,7 @@ using UnityEngine;
 
 public class FsmStateIdle : FsmState
 {
-    private Animator _animator;
-
-    public FsmStateIdle(Fsm fsm, Animator animator) : base(fsm)
-    {
-        _animator = animator;
-    }
+    public FsmStateIdle(Fsm fsm) : base(fsm) { }
 
     public override void Enter() { }
     public override void Exit() { }

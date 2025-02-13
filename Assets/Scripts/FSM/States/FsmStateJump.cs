@@ -1,52 +1,55 @@
 ﻿using UnityEngine;
 
-public class FsmStateJump : FsmState
+public class FsmStateJump : FsmStateMovement
 {
-    private readonly Rigidbody _rigidbody;
-    private readonly Animator _animator;
     private readonly float _jumpForce;
 
-    public FsmStateJump(Fsm fsm, Rigidbody rigidbody, Animator animator, float jumpForce) : base(fsm)
+    public FsmStateJump(Fsm fsm, Rigidbody rigidbody, Animator animator, float speed, float jumpForce) : base(fsm, rigidbody, animator, speed)
     {
-        _rigidbody = rigidbody;
-        _animator = animator;
         _jumpForce = jumpForce;
     }
 
     public override void Enter() 
     {
-        _animator.SetBool("IsJumping", true);
+        Animator.SetBool("IsJumping", true);
 
         Jump();
     }
     public override void Exit() 
     {
-        _animator.SetBool("IsJumping", false);
+        Animator.SetBool("IsJumping", false);
     }
     public override void Update()
     {
-        Debug.Log(_rigidbody.velocity);
+        var inputDirection = ReadInput();
+        Move(inputDirection);
 
-        //if (IsGrounded())
-        //{
-        //    Fsm.SetState<FsmStateIdle>();
-        //}
-    }
-
-    private Vector2 ReadInput()
-    {
-        return new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")).normalized;
+        if (Rigidbody.velocity.y < 0)
+        {
+            if (IsGrounded())
+            {
+                if (inputDirection.sqrMagnitude == 0f)
+                {
+                    Fsm.SetState<FsmStateIdle>();
+                }
+                else
+                {
+                    Fsm.SetState<FsmStateRun>();
+                }
+            }
+        }
     }
 
     private void Jump()
     {
-        _rigidbody.AddForce(Vector3.up * _jumpForce);
+        Rigidbody.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
     }
-
     private bool IsGrounded()
     {
-        if(Physics.Raycast(_rigidbody.position, Vector3.down, 1.1f))
+        if(Physics.Raycast(Rigidbody.position, Vector3.down, 0.1f))
+        {
             return true;
+        }
 
         return false;
     }
