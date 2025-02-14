@@ -31,7 +31,7 @@ public class CameraController : MonoBehaviour
         }
         else
         {
-            Cursor.lockState = CursorLockMode.Confined;
+            Cursor.lockState = CursorLockMode.None;
         }
 
         Quaternion rotation = Quaternion.Euler(_rotationY, _rotationX, 0);

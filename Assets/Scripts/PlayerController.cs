@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private float _speed = 8f;
+    [SerializeField] private float _speed = 5f;
     [SerializeField] private float _jumpForce = 6f;
     
     private Rigidbody _rigidbody;
@@ -15,14 +15,14 @@ public class PlayerController : MonoBehaviour
         _animator = GetComponent<Animator>();
         _fsm = new Fsm();
 
-        _fsm.AddState(new FsmStateIdle(_fsm));
-        _fsm.AddState(new FsmStateRun(_fsm, _rigidbody, _animator, _speed));
-        _fsm.AddState(new FsmStateJump(_fsm, _rigidbody, _animator, _speed, _jumpForce));
+        _fsm.AddState(new FsmStatePlayerIdle(_fsm));
+        _fsm.AddState(new FsmStatePlayerRun(_fsm, _rigidbody, _animator, _speed));
+        _fsm.AddState(new FsmStatePlayerJump(_fsm, _rigidbody, _animator, _speed, _jumpForce));
 
         _animator.SetBool("IsRunning", false);
         _animator.SetBool("IsJumping", false);
 
-        _fsm.SetState<FsmStateIdle>();
+        _fsm.SetState<FsmStatePlayerIdle>();
     }
 
     private void Update()

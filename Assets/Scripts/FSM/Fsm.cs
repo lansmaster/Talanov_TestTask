@@ -41,6 +41,7 @@ public class Fsm
     {
         StateCurrent?.FixedUpdate();
     }
+    
     public void OnCollisionEnter(Collision collision)
     {
         StateCurrent.OnCollisionEnter(collision);
