@@ -1,9 +1,9 @@
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float _speed = 8f;
-    [SerializeField] private float _jumpForce = 2f;
+    [SerializeField] private float _jumpForce = 6f;
     
     private Rigidbody _rigidbody;
     private Animator _animator;
@@ -19,7 +19,7 @@ public class Player : MonoBehaviour
         _fsm.AddState(new FsmStateRun(_fsm, _rigidbody, _animator, _speed));
         _fsm.AddState(new FsmStateJump(_fsm, _rigidbody, _animator, _speed, _jumpForce));
 
-        _animator.SetBool("IsMoving", false);
+        _animator.SetBool("IsRunning", false);
         _animator.SetBool("IsJumping", false);
 
         _fsm.SetState<FsmStateIdle>();
@@ -28,5 +28,15 @@ public class Player : MonoBehaviour
     private void Update()
     {
         _fsm.Update();
+    }
+
+    private void FixedUpdate()
+    {
+        _fsm.FixedUpdate();
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        _fsm.OnCollisionEnter(collision);
     }
 }

@@ -4,6 +4,8 @@ public class FsmStateJump : FsmStateMovement
 {
     private readonly float _jumpForce;
 
+    private bool _isGrounded;
+
     public FsmStateJump(Fsm fsm, Rigidbody rigidbody, Animator animator, float speed, float jumpForce) : base(fsm, rigidbody, animator, speed)
     {
         _jumpForce = jumpForce;
@@ -19,22 +21,32 @@ public class FsmStateJump : FsmStateMovement
     {
         Animator.SetBool("IsJumping", false);
     }
+
+    public override void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.CompareTag("Ground"))
+        {
+            _isGrounded = true;
+        }
+    }
+
     public override void Update()
     {
-        var inputDirection = ReadInput();
-        Move(inputDirection);
+        base.Update();
 
-        if (Rigidbody.velocity.y < 0)
+        if (Animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f) // поменять на что то другое
         {
-            if (IsGrounded())
+            if (_isGrounded)
             {
                 if (inputDirection.sqrMagnitude == 0f)
                 {
                     Fsm.SetState<FsmStateIdle>();
+                    return;
                 }
                 else
                 {
                     Fsm.SetState<FsmStateRun>();
+                    return;
                 }
             }
         }
@@ -43,14 +55,6 @@ public class FsmStateJump : FsmStateMovement
     private void Jump()
     {
         Rigidbody.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
-    }
-    private bool IsGrounded()
-    {
-        if(Physics.Raycast(Rigidbody.position, Vector3.down, 0.1f))
-        {
-            return true;
-        }
-
-        return false;
+        _isGrounded = false;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class Fsm
 {
@@ -34,5 +35,14 @@ public class Fsm
     public void Update()
     {
         StateCurrent?.Update();
+    }
+
+    public void FixedUpdate()
+    {
+        StateCurrent?.FixedUpdate();
+    }
+    public void OnCollisionEnter(Collision collision)
+    {
+        StateCurrent.OnCollisionEnter(collision);
     }
 }

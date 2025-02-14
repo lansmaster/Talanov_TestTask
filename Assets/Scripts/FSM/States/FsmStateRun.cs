@@ -6,28 +6,26 @@ public class FsmStateRun : FsmStateMovement
 
     public override void Enter() 
     {
-        Animator.SetBool("IsMoving", true);
+        Animator.SetBool("IsRunning", true);
     }
     public override void Exit() 
     {
-        Animator.SetBool("IsMoving", false);
+        Animator.SetBool("IsRunning", false);
     }
     public override void Update()
     {
-        var inputDirection = ReadInput();
-
-        if (inputDirection.sqrMagnitude == 0f)
-        {
-            Fsm.SetState<FsmStateIdle>();
-        }
-        else
-        {
-            Move(inputDirection);
-        }
+        base.Update();
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Fsm.SetState<FsmStateJump>();
+            return;
+        }
+
+        if (inputDirection.sqrMagnitude == 0f)
+        {
+            Fsm.SetState<FsmStateIdle>();
+            return;
         }
     }
 }
